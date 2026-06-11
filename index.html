@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="子恒的博客 — 创造，不止于代码。探索科技、设计与创意的交汇点。" />
+  <meta name="keywords" content="portfolio, developer, designer, creator, tech, personal blog" />
+  <meta property="og:title" content="子恒的博客 | Creator · Developer · Designer" />
+  <meta property="og:description" content="创造，不止于代码。探索科技、设计与创意的交汇点。" />
+  <meta property="og:type" content="website" />
+  <title>子恒的博客 | Creator · Developer · Designer</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- Lenis smooth scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js" defer></script>
+
+  <!-- Three.js import map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>●</text></svg>" />
+</head>
+<body>
+
+  <!-- ============================================ -->
+  <!-- NOISE OVERLAY                                -->
+  <!-- ============================================ -->
+  <div class="noise-overlay" aria-hidden="true"></div>
+
+  <!-- ============================================ -->
+  <!-- VIGNETTE                                     -->
+  <!-- ============================================ -->
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- ============================================ -->
+  <!-- MOUSE GLOW                                   -->
+  <!-- ============================================ -->
+  <div class="mouse-glow" aria-hidden="true"></div>
+
+  <!-- ============================================ -->
+  <!-- PAGE PROGRESS BAR                            -->
+  <!-- ============================================ -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-bar-fill"></div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- THREE.JS BACKGROUND CANVAS                   -->
+  <!-- ============================================ -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============================================ -->
+  <!-- NAVIGATION — Layered Glass                   -->
+  <!-- ============================================ -->
+  <nav class="nav" id="nav">
+    <!-- Blur layer -->
+    <div class="nav-blur"></div>
+    <!-- Noise layer -->
+    <div class="nav-noise"></div>
+    <!-- Highlight border -->
+    <div class="nav-highlight"></div>
+    <!-- Content -->
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">ZIHENG</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#hero" class="nav-link active">首页</a>
+        <a href="#about" class="nav-link">关于</a>
+        <a href="#skills" class="nav-link">技能</a>
+        <a href="#portfolio" class="nav-link">作品</a>
+        <a href="#timeline" class="nav-link">经历</a>
+        <a href="#contact" class="nav-link">联系</a>
+        <a href="chat.html" class="nav-link nav-link-ai">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          AI 对话
+        </a>
+      </div>
+      <div class="nav-actions">
+        <!-- Login / User menu -->
+        <div class="user-menu" id="userMenu">
+          <a href="login.html" class="nav-login-btn" id="loginBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>登录</span>
+          </a>
+        </div>
+        <!-- Theme toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">
+          <span class="theme-toggle-track">
+            <span class="theme-toggle-thumb">
+              <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+              <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21.64 13a1 1 0 00-1.05-.14 8.05 8.05 0 01-3.37.73 8.15 8.15 0 01-8.14-8.1 8.59 8.59 0 01.25-2A1 1 0 008.43 3a10.15 10.15 0 1010.62 10.62 1 1 0 00.59-.62z"/></svg>
+            </span>
+          </span>
+        </button>
+        <!-- Mobile menu -->
+        <button class="nav-menu-btn" id="menuBtn" aria-label="菜单">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile dropdown -->
+    <div class="nav-mobile" id="navMobile">
+      <a href="#hero">首页</a>
+      <a href="#about">关于</a>
+      <a href="#skills">技能</a>
+      <a href="#portfolio">作品</a>
+      <a href="#timeline">经历</a>
+      <a href="#contact">联系</a>
+      <a href="chat.html">✦ AI 对话</a>
+      <a href="login.html" id="mobileLoginLink">登录</a>
+    </div>
+  </nav>
+
+  <!-- ============================================ -->
+  <!-- MAIN CONTENT                                 -->
+  <!-- ============================================ -->
+  <main id="main">
+
+    <!-- ========================================== -->
+    <!-- HERO                                       -->
+    <!-- ========================================== -->
+    <section id="hero" class="hero">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-content">
+        <div class="hero-badge reveal">
+          <span class="hero-badge-dot"></span>
+          DIGITAL CREATIVE
+        </div>
+        <h1 class="hero-title reveal-delay-1">
+          <span class="hero-title-main">创造，<br/>不止于代码。</span>
+        </h1>
+        <div class="hero-roles reveal-delay-2">
+          <span class="hero-role active" data-text="CREATOR">CREATOR</span>
+          <span class="hero-role" data-text="DEVELOPER">DEVELOPER</span>
+          <span class="hero-role" data-text="DESIGNER">DESIGNER</span>
+          <span class="hero-role" data-text="STORYTELLER">STORYTELLER</span>
+        </div>
+        <p class="hero-subtitle reveal-delay-3">
+          探索科技、设计与叙事的无限可能。<br/>用代码与审美，构建令人心动的数字体验。
+        </p>
+        <div class="hero-cta reveal-delay-4">
+          <a href="#portfolio" class="btn-primary">
+            查看作品
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#contact" class="btn-ghost">联系我 →</a>
+        </div>
+      </div>
+      <div class="hero-scroll">
+        <span>Scroll</span>
+        <div class="hero-scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABOUT                                      -->
+    <!-- ========================================== -->
+    <section id="about" class="about">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-badge">
+            <span class="section-badge-dot"></span>
+            关于我
+          </div>
+          <h2 class="section-title">
+            将创意转化为<br/><span class="text-accent">数字现实。</span>
+          </h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-text reveal-delay-1" id="aboutText">
+            <p>我是一名多领域创作者，热衷于打造美观且实用的数字体验。从前端开发到 UI 设计，从创意内容到技术评测，我为每个项目注入独特的视角与思考。</p>
+            <p>我相信代码与视觉设计都是讲故事的方式。将技术精度与创意探索融为一体，创造出能真正打动人心的作品。</p>
+            <div class="about-tags">
+              <span class="tag">前端开发</span><span class="tag">UI/UX 设计</span><span class="tag">摄影</span>
+              <span class="tag">3D 图形</span><span class="tag">开源贡献</span><span class="tag">数字艺术</span>
+              <span class="tag">科技评测</span><span class="tag">创意编程</span>
+            </div>
+          </div>
+          <div class="about-stats reveal-delay-2" id="aboutStats">
+            <div class="stat-card"><span class="stat-value hud-number">5+</span><span class="stat-label">年经验</span></div>
+            <div class="stat-card"><span class="stat-value hud-number">30+</span><span class="stat-label">项目交付</span></div>
+            <div class="stat-card"><span class="stat-value hud-number">15+</span><span class="stat-label">技术栈</span></div>
+            <div class="stat-card"><span class="stat-value hud-number">10K+</span><span class="stat-label">社区影响力</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SKILLS                                     -->
+    <!-- ========================================== -->
+    <section id="skills" class="skills">
+      <div class="skills-divider"></div>
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-badge">
+            <span class="section-badge-dot"></span>
+            技术栈
+          </div>
+          <h2 class="section-title">
+            技能与<br/><span class="text-accent">能力。</span>
+          </h2>
+        </div>
+        <div class="skills-grid">
+          <div class="skills-group reveal-delay-1">
+            <h3 class="skills-group-title"><span class="skills-dot" style="--dot-color:#0071E3"></span>前端技术</h3>
+            <div class="skills-list">
+              <div class="skill-item"><div class="skill-info"><span>HTML / CSS</span><span class="hud-number">95%</span></div><div class="skill-bar"><div class="skill-fill" data-width="95" style="--fill-color:#0071E3"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>JavaScript</span><span class="hud-number">90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90" style="--fill-color:#0071E3"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>TypeScript</span><span class="hud-number">85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85" style="--fill-color:#0071E3"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>React / Next.js</span><span class="hud-number">90%</span></div><div class="skill-bar"><div class="skill-fill" data-width="90" style="--fill-color:#0071E3"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>Vue.js</span><span class="hud-number">75%</span></div><div class="skill-bar"><div class="skill-fill" data-width="75" style="--fill-color:#0071E3"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>TailwindCSS</span><span class="hud-number">92%</span></div><div class="skill-bar"><div class="skill-fill" data-width="92" style="--fill-color:#0071E3"></div></div></div>
+            </div>
+          </div>
+          <div class="skills-group reveal-delay-2">
+            <h3 class="skills-group-title"><span class="skills-dot" style="--dot-color:#3B82F6"></span>后端与工具</h3>
+            <div class="skills-list">
+              <div class="skill-item"><div class="skill-info"><span>Node.js</span><span class="hud-number">82%</span></div><div class="skill-bar"><div class="skill-fill" data-width="82" style="--fill-color:#3B82F6"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>Python</span><span class="hud-number">78%</span></div><div class="skill-bar"><div class="skill-fill" data-width="78" style="--fill-color:#3B82F6"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>PostgreSQL</span><span class="hud-number">70%</span></div><div class="skill-bar"><div class="skill-fill" data-width="70" style="--fill-color:#3B82F6"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>Git / GitHub</span><span class="hud-number">88%</span></div><div class="skill-bar"><div class="skill-fill" data-width="88" style="--fill-color:#3B82F6"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>Docker</span><span class="hud-number">65%</span></div><div class="skill-bar"><div class="skill-fill" data-width="65" style="--fill-color:#3B82F6"></div></div></div>
+              <div class="skill-item"><div class="skill-info"><span>Figma</span><span class="hud-number">85%</span></div><div class="skill-bar"><div class="skill-fill" data-width="85" style="--fill-color:#3B82F6"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- PORTFOLIO                                  -->
+    <!-- ========================================== -->
+    <section id="portfolio" class="portfolio">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-badge">
+            <span class="section-badge-dot accent-purple"></span>
+            精选作品
+          </div>
+          <h2 class="section-title">
+            项目<br/><span class="text-accent">精选集。</span>
+          </h2>
+        </div>
+        <!-- Filters -->
+        <div class="portfolio-filters reveal-delay-1">
+          <button class="filter-btn active" data-filter="all">全部作品</button>
+          <button class="filter-btn" data-filter="frontend">前端项目</button>
+          <button class="filter-btn" data-filter="photography">摄影</button>
+          <button class="filter-btn" data-filter="ui-design">UI 设计</button>
+          <button class="filter-btn" data-filter="tech-review">科技评测</button>
+          <button class="filter-btn" data-filter="opensource">开源项目</button>
+        </div>
+        <!-- Grid — 由 JS 从 API 动态加载 -->
+        <div class="portfolio-grid reveal-delay-2" id="portfolioGrid">
+          <!-- 动态填充 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TIMELINE                                   -->
+    <!-- ========================================== -->
+    <section id="timeline" class="timeline">
+      <div class="timeline-orb"></div>
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-badge">
+            <span class="section-badge-dot accent-purple"></span>
+            成长历程
+          </div>
+          <h2 class="section-title">
+            一路走来的<br/><span class="text-accent">故事。</span>
+          </h2>
+        </div>
+        <div class="timeline-wrapper">
+          <div class="timeline-line"></div>
+          <div class="timeline-items">
+            <div class="timeline-item reveal">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <span class="timeline-year hud-number">2024</span>
+                <h3>高级前端工程师</h3>
+                <p class="timeline-sub">某科技公司 · 全职</p>
+                <p>主导设计系统前端架构，服务 50+ 产品团队。推动 Next.js 与 RSC 全面落地。</p>
+              </div>
+            </div>
+            <div class="timeline-item reveal">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <span class="timeline-year hud-number">2023</span>
+                <h3>创意技术专家</h3>
+                <p class="timeline-sub">数字工作室 · 自由职业</p>
+                <p>为全球品牌设计并开发沉浸式 Web 体验，融合 3D、动画与叙事设计。</p>
+              </div>
+            </div>
+            <div class="timeline-item reveal">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <span class="timeline-year hud-number">2022</span>
+                <h3>前端开发工程师</h3>
+                <p class="timeline-sub">初创公司 XYZ · 全职</p>
+                <p>从零搭建核心产品 UI，服务 10 万+ 用户。建立组件库与测试体系。</p>
+              </div>
+            </div>
+            <div class="timeline-item reveal">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <span class="timeline-year hud-number">2021</span>
+                <h3>开始内容创作</h3>
+                <p class="timeline-sub">Bilibili / 微信公众号</p>
+                <p>启动科技数码频道，专注创作工具与开发者硬件评测。首年粉丝破万。</p>
+              </div>
+            </div>
+            <div class="timeline-item reveal">
+              <div class="timeline-dot"></div>
+              <div class="timeline-card">
+                <span class="timeline-year hud-number">2020</span>
+                <h3>首次开源贡献</h3>
+                <p class="timeline-sub">开源社区</p>
+                <p>开始参与开源项目，发布首个 React 动画工具 npm 包。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- CONTACT                                    -->
+    <!-- ========================================== -->
+    <section id="contact" class="contact">
+      <div class="container contact-inner">
+        <div class="section-header reveal text-center">
+          <div class="section-badge">
+            <span class="section-badge-dot"></span>
+            保持联系
+          </div>
+          <h2 class="section-title">
+            一起创造<br/><span class="text-accent">更好的作品。</span>
+          </h2>
+          <p class="contact-desc reveal-delay-1">开放合作，欢迎有趣的项目与创意机会。<br/>随时联系，很高兴认识你。</p>
+        </div>
+        <div class="contact-links reveal-delay-2">
+          <a href="https://github.com" target="_blank" rel="noopener" class="contact-link">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            <span>GitHub</span>
+          </a>
+          <a href="https://bilibili.com" target="_blank" rel="noopener" class="contact-link">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 01-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 01.16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z"/></svg>
+            <span>Bilibili</span>
+          </a>
+          <a href="mailto:hello@ziheng.me" class="contact-link">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+            <span>Email</span>
+          </a>
+          <a href="#" class="contact-link">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 01.213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 00.167-.054l1.903-1.114a.864.864 0 01.717-.098 10.16 10.16 0 002.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178A1.17 1.17 0 014.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 01-1.162 1.178 1.17 1.17 0 01-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 01.598.082l1.584.926a.272.272 0 00.14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 01.023-.156.49.49 0 01.155-.346C22.72 18.354 24 16.593 24 14.568c0-3.116-2.996-5.652-6.947-5.71zm-2.398 2.89c.535 0 .969.44.969.982a.976.976 0 01-.969.983.976.976 0 01-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 01-.969.983.976.976 0 01-.969-.983c0-.542.434-.982.97-.982z"/></svg>
+            <span>微信</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================ -->
+  <!-- FLOATING AI BUTTON                           -->
+  <!-- ============================================ -->
+  <a href="chat.html" class="ai-float-btn" id="aiFloatBtn" title="和 AI 对话">
+    <div class="ai-float-glow"></div>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+    <span class="ai-float-label">AI 对话</span>
+  </a>
+
+  <!-- ============================================ -->
+  <!-- FOOTER                                      -->
+  <!-- ============================================ -->
+  <footer class="footer">
+    <div class="footer-glow"></div>
+    <div class="container footer-inner">
+      <p class="footer-slogan">以精度与热情，雕琢每一个像素。</p>
+      <p class="footer-copy">&copy; 2026 ZIHENG. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js" defer></script>
+  <script>
+    // ============================================
+    // API 配置
+    // ============================================
+    const API = 'http://localhost:3000/api';
+
+    // ============================================
+    // 登录态管理
+    // ============================================
+    (function initAuth() {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      const loginBtn = document.getElementById('loginBtn');
+      const userMenu = document.getElementById('userMenu');
+      const mobileLink = document.getElementById('mobileLoginLink');
+
+      if (token && userStr) {
+        const user = JSON.parse(userStr);
+
+        // 桌面端：替换为用户菜单
+        loginBtn.href = 'admin.html';
+        loginBtn.querySelector('span').textContent = user.name;
+        loginBtn.querySelector('svg').innerHTML = '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>';
+
+        // 添加下拉菜单
+        const dropdown = document.createElement('div');
+        dropdown.className = 'user-dropdown';
+        dropdown.innerHTML =
+          '<a href="admin.html" class="user-dropdown-item">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>' +
+            '管理后台' +
+          '</a>' +
+          '<div class="user-dropdown-divider"></div>' +
+          '<a href="#" class="user-dropdown-item user-dropdown-logout" id="logoutBtn">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+            '退出登录' +
+          '</a>';
+        userMenu.appendChild(dropdown);
+
+        // 下拉菜单切换
+        loginBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          dropdown.classList.toggle('open');
+        });
+
+        // 点击外部关闭
+        document.addEventListener('click', function(e) {
+          if (!userMenu.contains(e.target)) {
+            dropdown.classList.remove('open');
+          }
+        });
+
+        // 退出登录
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+          e.preventDefault();
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.reload();
+        });
+
+        // 移动端：更新链接
+        if (mobileLink) {
+          mobileLink.href = 'admin.html';
+          mobileLink.textContent = user.name + ' · 管理后台';
+        }
+      }
+    })();
+
+    // ============================================
+    // 动态加载作品集
+    // ============================================
+    (async function loadPortfolio() {
+      const grid = document.getElementById('portfolioGrid');
+      if (!grid) return;
+
+      try {
+        const res = await fetch(`${API}/portfolio`);
+        const data = await res.json();
+
+        if (!data.items || !data.items.length) {
+          grid.innerHTML = '<p style="color:var(--text-muted);text-align:center;grid-column:1/-1;">暂无作品</p>';
+          return;
+        }
+
+        grid.innerHTML = data.items.map(function(item) {
+          var tagsHtml = item.tags.map(function(t) { return '<span>' + t + '</span>'; }).join('');
+          return '<div class="project-card" data-category="' + item.category + '">' +
+            '<div class="project-image" style="--card-gradient:' + item.gradient + '">' +
+              '<div class="project-image-decor"></div>' +
+              '<span class="project-image-letter">' + item.letter + '</span>' +
+            '</div>' +
+            '<div class="project-body">' +
+              '<h3>' + item.title + '</h3>' +
+              '<p>' + item.description + '</p>' +
+              '<div class="project-tags">' + tagsHtml + '</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        // 重新初始化筛选功能（如果 script.js 中有 initPortfolio）
+        if (typeof initPortfolio === 'function') {
+          initPortfolio();
+        }
+      } catch (err) {
+        console.warn('无法加载作品集，使用默认内容');
+        grid.innerHTML =
+          '<div class="project-card" data-category="frontend">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#0a0a2e,#0d0d3b)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">H</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>Horizon 仪表盘</h3><p>未来感后台管理界面，实时数据可视化，支持暗色模式。</p>' +
+              '<div class="project-tags"><span>React</span><span>TypeScript</span><span>TailwindCSS</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card" data-category="photography">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#1a1025,#0d0d1a)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">星</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>星云摄影集</h3><p>天文摄影与长曝光夜景精选，探索光与时间的艺术。</p>' +
+              '<div class="project-tags"><span>Lightroom</span><span>Photoshop</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card" data-category="ui-design">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#0d1a2b,#0a0a15)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">像</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>像素画布编辑器</h3><p>基于 Web 的在线设计工具，集成 AI 智能抠图与图层管理。</p>' +
+              '<div class="project-tags"><span>Vue.js</span><span>Canvas API</span><span>Figma</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card" data-category="tech-review">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#1a1520,#0e0a18)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">T</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>科技开箱系列</h3><p>电影级质感科技评测视频，深度体验最新数码硬件。</p>' +
+              '<div class="project-tags"><span>Premiere Pro</span><span>DaVinci</span><span>Blender</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card" data-category="opensource">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#0f1a25,#080d18)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">O</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>OpenLink 导航</h3><p>链接聚合平台，自定义主题与数据看板，开源可自部署。</p>' +
+              '<div class="project-tags"><span>Next.js</span><span>Prisma</span><span>PostgreSQL</span></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="project-card" data-category="photography">' +
+            '<div class="project-image" style="--card-gradient:linear-gradient(135deg,#1a1020,#0d0a15)">' +
+              '<div class="project-image-decor"></div><span class="project-image-letter">街</span>' +
+            '</div>' +
+            '<div class="project-body"><h3>街头光影</h3><p>城市街头黑白摄影系列，捕捉都市生活与几何构图的诗意。</p>' +
+              '<div class="project-tags"><span>Fujifilm</span><span>Lightroom</span></div>' +
+            '</div>' +
+          '</div>';
+      }
+    })();
+
+    // ============================================
+    // 动态加载关于信息
+    // ============================================
+    (async function loadAbout() {
+      try {
+        const res = await fetch(`${API}/about`);
+        const data = await res.json();
+
+        if (data.content) {
+          var aboutText = document.getElementById('aboutText');
+          if (aboutText) {
+            var paragraphs = data.content.split('\n').filter(function(p) { return p.trim(); });
+            var pTags = paragraphs.map(function(p) { return '<p>' + p + '</p>'; }).join('');
+            var existingTags = aboutText.querySelector('.about-tags');
+            aboutText.innerHTML = pTags;
+            if (existingTags) aboutText.appendChild(existingTags);
+          }
+        }
+
+        if (data.stats && data.stats.length) {
+          var statsContainer = document.getElementById('aboutStats');
+          if (statsContainer) {
+            statsContainer.innerHTML = data.stats.map(function(s) {
+              return '<div class="stat-card"><span class="stat-value hud-number">' + s.value + '</span><span class="stat-label">' + s.label + '</span></div>';
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.warn('无法加载关于信息，使用默认内容');
+      }
+    })();
+  </script>
+</body>
+</html>
